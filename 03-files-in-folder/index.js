@@ -11,7 +11,7 @@ fs.readdir(way, {withFileTypes: true}, (err, files) => {
       let ext = elem.name.slice(elem.name.lastIndexOf('.') + 1);
 
       fs.stat(path.join(way, elem.name), (err, stats) => {
-        console.log(`${name} - ${ext} - ${stats.size / 1000}'`);
+        console.log(`${name} - ${ext} - ${stats.size / 1000}`);
       });
     }
   });
