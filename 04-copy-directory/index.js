@@ -19,6 +19,7 @@ function copyDir(oldDir, newDir) {
   });
 
   fs.readdir(oldDir, {withFileTypes: true}, (err, elements) => {
+    if (err) return err;
     elements.forEach(elem => {
       if (elem.isFile()) {
         fs.copyFile( path.join(oldDir, elem.name), path.join(newDir, elem.name), (err) => {
@@ -33,9 +34,10 @@ function copyDir(oldDir, newDir) {
 
 function delDir(way) {
   fs.readdir(way, (err, files) => {
+    if (err) return err;
     if (files) {
       files.forEach(elem => {
-        fs.unlink(path.join(way, elem));
+        fs.unlink(path.join(way, elem), () => {});
       });
     }
   });
