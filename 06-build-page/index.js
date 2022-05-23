@@ -59,7 +59,7 @@ fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
         if (err) return err;
         templ = templ.replace(`{{${file.slice(0, file.lastIndexOf('.'))}}}`, data);
         if (i === files.length - 1) {
-          fs.writeFile(path.join(newWay, 'template.html'), templ, () => {});
+          fs.writeFile(path.join(newWay, 'index.html'), templ, () => {});
         }
       });
     });
