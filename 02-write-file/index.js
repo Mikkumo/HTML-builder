@@ -12,7 +12,7 @@ stdin.on('data', (data) => {
   way.write(data);
 });
 
-process.on('', closeFunc);
+process.on('SIGINT', closeFunc);
 
 function closeFunc() {
   stdout.write('    Goodbay!');
