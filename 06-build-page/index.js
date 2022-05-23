@@ -17,11 +17,11 @@ fs.mkdir(newWay, () => {
   });
 });
 
-copyFile(oldWayImg, newWayImg);
-copyFile(oldWayFonts, newWayFonts);
-copyFile(oldWaySvg, newWaySvg);
+copyDir(oldWayImg, newWayImg);
+copyDir(oldWayFonts, newWayFonts);
+copyDir(oldWaySvg, newWaySvg);
   
-function copyFile(oldWay, newWay) {  
+function copyDir(oldWay, newWay) {  
   delDir(newWay);
   
   fs.readdir(oldWay, (err, files) => {
@@ -49,31 +49,38 @@ function delDir(way) {
 }
 
 fs.readFile(path.join(__dirname, 'template.html'), 'utf-8', (err, data) => {
+  if (err) return err;
   let templ = data;
   
   fs.readdir(path.join(__dirname, 'components'), (err, files) => {
+    if (err) return err;
     files.forEach((file, i) => {
       fs.readFile(path.join(path.join(__dirname, 'components'), file), 'utf-8', (err, data) => {
+        if (err) return err;
         templ = templ.replace(`{{${file.slice(0, file.lastIndexOf('.'))}}}`, data);
         if (i === files.length - 1) {
-          setTimeout(() => fs.writeFile(path.join(newWay, 'template.html'), templ, () => {}), 100);
+          fs.writeFile(path.join(newWay, 'template.html'), templ, () => {});
         }
       });
     });
   });
 });
-  
-fs.readdir(path.join(__dirname, 'styles'), (err, files) => {
-  let result = '';
-  const cssFilesList = files.filter((file) => file.slice(file.lastIndexOf('.')) === '.css');
 
-  cssFilesList.forEach((file) => {
-    fs.readFile(path.join(path.join(__dirname, 'styles'), file), 'utf-8', (err, data) => {
-      result += data;
-      fs.writeFile(path.join(newWay, 'style.css'), result, (err) => {
-        if (err) return err;
+fs.readdir(path.join(__dirname, 'styles'), (err, files) => {
+  if (err) return err;
+  fs.writeFile(path.join(newWay, 'style.css'), '', (err) => {
+    if (err) return err;
+  });
+
+  files.forEach((file) => {
+    let fileWay = path.join(path.join(__dirname, 'styles'), file);
+
+    if (path.parse(fileWay).ext === '.css') {
+      fs.createReadStream(fileWay).on('data', (data) => {
+        fs.appendFile(path.join(newWay, 'style.css'), data, (err) => {
+          if (err) return err;
+        });
       });
-    });
+    }
   });
 });
-  
